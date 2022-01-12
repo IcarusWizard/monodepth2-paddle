@@ -1,7 +1,6 @@
 import numpy as np
 
 import paddle
-from paddle.fluid.layers.nn import expand
 import paddle.nn as nn
 import paddle.nn.functional as F
 
@@ -24,11 +23,11 @@ def transformation_from_parameters(axisangle, translation, invert=False):
     Convert the network's (axisangle, translation) output into a 4x4 matrix
     """
     R = rot_from_axisangle(axisangle)
-    t = translation.clone()
+    t = translation
 
     if invert:
         R = R.transpose((0, 2, 1))
-        t *= -1
+        t = - t
 
     T = get_translation_matrix(t)
 
@@ -44,15 +43,15 @@ def get_translation_matrix(translation_vector):
     """
     Convert a translation vector into a 4x4 transformation matrix
     """
-    T = paddle.zeros((translation_vector.shape[0], 4, 4))
+    T = paddle.zeros((translation_vector.shape[0], 4, 3))
 
     t = translation_vector.reshape((-1, 3, 1))
+    t = paddle.concat([t, paddle.ones((t.shape[0], 1, 1))], axis=1)
 
     T[:, 0, 0] = 1
     T[:, 1, 1] = 1
     T[:, 2, 2] = 1
-    T[:, 3, 3] = 1
-    T[:, :3, 3, None] = t
+    T = paddle.concat([T, t], axis=-1)
 
     return T
 
@@ -63,16 +62,17 @@ def rot_from_axisangle(vec):
     (adapted from https://github.com/Wallacoloo/printipi)
     Input 'vec' has to be Bx1x3
     """
+    batch_size = vec.shape[0]
     angle = paddle.norm(vec, 2, 2, True)
     axis = vec / (angle + 1e-7)
-
-    ca = paddle.cos(angle)
-    sa = paddle.sin(angle)
+    
+    ca = paddle.cos(angle).squeeze()
+    sa = paddle.sin(angle).squeeze()
     C = 1 - ca
 
-    x = axis[..., 0].unsqueeze(1)
-    y = axis[..., 1].unsqueeze(1)
-    z = axis[..., 2].unsqueeze(1)
+    x = axis[..., 0].squeeze()
+    y = axis[..., 1].squeeze(1)
+    z = axis[..., 2].squeeze(1)
 
     xs = x * sa
     ys = y * sa
@@ -84,18 +84,14 @@ def rot_from_axisangle(vec):
     yzC = y * zC
     zxC = z * xC
 
-    rot = paddle.zeros((vec.shape[0], 4, 4))
-
-    rot[:, 0, 0] = paddle.squeeze(x * xC + ca)
-    rot[:, 0, 1] = paddle.squeeze(xyC - zs)
-    rot[:, 0, 2] = paddle.squeeze(zxC + ys)
-    rot[:, 1, 0] = paddle.squeeze(xyC + zs)
-    rot[:, 1, 1] = paddle.squeeze(y * yC + ca)
-    rot[:, 1, 2] = paddle.squeeze(yzC - xs)
-    rot[:, 2, 0] = paddle.squeeze(zxC - ys)
-    rot[:, 2, 1] = paddle.squeeze(yzC + xs)
-    rot[:, 2, 2] = paddle.squeeze(z * zC + ca)
-    rot[:, 3, 3] = 1
+    ones = paddle.ones((batch_size,))
+    zeros = paddle.zeros((batch_size,))
+    rot = paddle.stack([
+        paddle.stack([x * xC + ca, xyC - zs, zxC + ys, zeros], axis=1),
+        paddle.stack([xyC + zs, y * yC + ca, yzC - xs, zeros], axis=1),
+        paddle.stack([zxC - ys, yzC + xs, z * zC + ca, zeros], axis=1),
+        paddle.stack([zeros, zeros, zeros, ones], axis=1)
+    ], axis=1)
 
     return rot
 

@@ -16,7 +16,6 @@ from layers import *
 import datasets
 import networks
 
-
 class Trainer:
     def __init__(self, options):
         self.opt = options
@@ -167,11 +166,18 @@ class Trainer:
         """
         self.epoch = 0
         self.step = 0
+        best_val_loss = float("inf")
         self.start_time = time.time()
         for self.epoch in range(self.opt.num_epochs):
             self.run_epoch()
             if (self.epoch + 1) % self.opt.save_frequency == 0:
-                self.save_model()
+                self.save_model(self.epoch)
+            
+            val_loss = self.val()
+            print(f'In epoch {self.epoch}, the validation loss is {val_loss}.')
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                self.save_model("best")
 
     def run_epoch(self):
         """
@@ -182,30 +188,28 @@ class Trainer:
         print("Training")
         self.set_train()
 
+        last_log_time = time.time()
+        loss_list = []
         for batch_idx, inputs in enumerate(self.train_loader):
-
-            before_op_time = time.time()
 
             outputs, losses = self.process_batch(inputs)
 
             self.model_optimizer.clear_grad()
             losses["loss"].backward()
             self.model_optimizer.step()
+            loss_list.append(losses["loss"].numpy()[0])
 
-            duration = time.time() - before_op_time
+            duration = time.time() - last_log_time
 
-            # log less frequently after the first 2000 steps to save time & disk space
-            early_phase = batch_idx % self.opt.log_frequency == 0 and self.step < 2000
-            late_phase = self.step % 2000 == 0
+            if (batch_idx + 1) % self.opt.log_frequency == 0:
+                self.log_time(batch_idx + 1, duration / self.opt.log_frequency, sum(loss_list) / len(loss_list))
+                last_log_time = time.time()
 
-            if early_phase or late_phase:
-                self.log_time(batch_idx, duration, losses["loss"].numpy()[0])
-
+            if self.step % self.opt.visualdl_frequency == 0:
                 if "depth_gt" in inputs:
                     self.compute_depth_losses(inputs, outputs, losses)
 
-                self.log("train", inputs, outputs, losses)
-                self.val()
+                self.visualdl_log("train", inputs, outputs, losses)
 
             self.step += 1
 
@@ -301,28 +305,28 @@ class Trainer:
         return outputs
 
     def val(self):
-        """Validate the model on a single minibatch
+        """
+        Validate the model on the validation set
         """
         self.set_eval()
-        try:
-            inputs = self.val_iter.next()
-        except StopIteration:
-            self.val_iter = iter(self.val_loader)
-            inputs = self.val_iter.next()
+        print("Validating")
 
         with paddle.no_grad():
-            outputs, losses = self.process_batch(inputs)
+            loss_list = []
+            for batch_idx, inputs in enumerate(self.val_loader):
+                outputs, losses = self.process_batch(inputs)
+                loss_list.append(losses["loss"].numpy()[0])
 
             if "depth_gt" in inputs:
                 self.compute_depth_losses(inputs, outputs, losses)
 
-            self.log("val", inputs, outputs, losses)
-            del inputs, outputs, losses
+            self.visualdl_log("val", inputs, outputs, losses)
 
-        self.set_train()
+        return sum(loss_list) / len(loss_list)
 
     def generate_images_pred(self, inputs, outputs):
-        """Generate the warped (reprojected) color images for a minibatch.
+        """
+        Generate the warped (reprojected) color images for a minibatch.
         Generated images are saved into the `outputs` dictionary.
         """
         for scale in self.opt.scales:
@@ -364,9 +368,14 @@ class Trainer:
 
                 outputs[("sample", frame_id, scale)] = pix_coords
 
+                # NOTE: Paddle requires img has stop_gradient=False if grid.stop_gradient=False.
+                # This should be a bug, already submit an issue to github. 
+                # https://github.com/PaddlePaddle/Paddle/issues/38900 
+                img = inputs[("color", frame_id, source_scale)].clone()
+                img.stop_gradient = False
                 outputs[("color", frame_id, scale)] = F.grid_sample(
-                    inputs[("color", frame_id, source_scale)],
-                    outputs[("sample", frame_id, scale)].detach(),
+                    img,
+                    outputs[("sample", frame_id, scale)],
                     padding_mode="border")
 
                 if not self.opt.disable_automasking:
@@ -458,7 +467,8 @@ class Trainer:
             if combined.shape[1] == 1:
                 to_optimise = combined
             else:
-                to_optimise, idxs = paddle.min(combined, axis=1)
+                to_optimise = paddle.min(combined, axis=1)
+                idxs = paddle.argmin(combined, axis=1)
 
             if not self.opt.disable_automasking:
                 outputs["identity_selection/{}".format(scale)] = (
@@ -514,16 +524,15 @@ class Trainer:
         """
         samples_per_sec = self.opt.batch_size / duration
         time_sofar = time.time() - self.start_time
-        training_time_left = (
-            self.num_total_steps / self.step - 1.0) * time_sofar if self.step > 0 else 0
+        training_time_left = (self.num_total_steps / self.step - 1.0) * time_sofar if self.step > 0 else 0
         print_string = "epoch {:>3} | batch {:>6} | examples/s: {:5.1f}" + \
             " | loss: {:.5f} | time elapsed: {} | time left: {}"
         print(print_string.format(self.epoch, batch_idx, samples_per_sec, loss,
                                   sec_to_hm_str(time_sofar), sec_to_hm_str(training_time_left)))
 
-    def log(self, mode, inputs, outputs, losses):
+    def visualdl_log(self, mode, inputs, outputs, losses):
         """
-        Write an event to the tensorboard events file
+        Write an event to the VisualDL
         """
         writer = self.writers[mode]
         for l, v in losses.items():
@@ -568,11 +577,11 @@ class Trainer:
         with open(os.path.join(models_dir, 'opt.json'), 'w') as f:
             json.dump(to_save, f, indent=2)
 
-    def save_model(self):
+    def save_model(self, suffix):
         """
         Save model weights to disk
         """
-        save_folder = os.path.join(self.log_path, "models", "weights_{}".format(self.epoch))
+        save_folder = os.path.join(self.log_path, "models", "weights_{}".format(suffix))
         if not os.path.exists(save_folder):
             os.makedirs(save_folder)
 
