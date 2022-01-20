@@ -9,13 +9,13 @@ class PoseCNN(nn.Layer):
         self.num_input_frames = num_input_frames
 
         self.convs = {}
-        self.convs[0] = nn.Conv2D(3 * num_input_frames, 16, 7, 2, 3)
-        self.convs[1] = nn.Conv2D(16, 32, 5, 2, 2)
-        self.convs[2] = nn.Conv2D(32, 64, 3, 2, 1)
-        self.convs[3] = nn.Conv2D(64, 128, 3, 2, 1)
-        self.convs[4] = nn.Conv2D(128, 256, 3, 2, 1)
-        self.convs[5] = nn.Conv2D(256, 256, 3, 2, 1)
-        self.convs[6] = nn.Conv2D(256, 256, 3, 2, 1)
+        self.convs[0] = nn.Conv2D(3 * num_input_frames, 16, 7, 2, 3, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[1] = nn.Conv2D(16, 32, 5, 2, 2, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[2] = nn.Conv2D(32, 64, 3, 2, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[3] = nn.Conv2D(64, 128, 3, 2, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[4] = nn.Conv2D(128, 256, 3, 2, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[5] = nn.Conv2D(256, 256, 3, 2, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[6] = nn.Conv2D(256, 256, 3, 2, 1, weight_attr=nn.initializer.KaimingUniform())
 
         self.pose_conv = nn.Conv2D(256, 6 * (num_input_frames - 1), 1)
 

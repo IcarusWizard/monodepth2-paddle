@@ -15,10 +15,10 @@ class PoseDecoder(nn.Layer):
         self.num_frames_to_predict_for = num_frames_to_predict_for
 
         self.convs = OrderedDict()
-        self.convs[("squeeze")] = nn.Conv2D(self.num_ch_enc[-1], 256, 1)
-        self.convs[("pose", 0)] = nn.Conv2D(num_input_features * 256, 256, 3, stride, 1)
-        self.convs[("pose", 1)] = nn.Conv2D(256, 256, 3, stride, 1)
-        self.convs[("pose", 2)] = nn.Conv2D(256, 6 * num_frames_to_predict_for, 1)
+        self.convs[("squeeze")] = nn.Conv2D(self.num_ch_enc[-1], 256, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[("pose", 0)] = nn.Conv2D(num_input_features * 256, 256, 3, stride, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[("pose", 1)] = nn.Conv2D(256, 256, 3, stride, 1, weight_attr=nn.initializer.KaimingUniform())
+        self.convs[("pose", 2)] = nn.Conv2D(256, 6 * num_frames_to_predict_for, 1, weight_attr=nn.initializer.KaimingUniform())
 
         self.relu = nn.ReLU()
 

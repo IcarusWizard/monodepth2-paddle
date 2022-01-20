@@ -27,10 +27,14 @@ class MonodepthOptions:
                                  default=os.path.join(os.path.expanduser("~"), "tmp"))
 
         # TRAINING options
+        self.parser.add_argument('--num_gpus',
+                                 type=int,
+                                 help='number of gpus used in training',
+                                 default=1)
         self.parser.add_argument("--seed",
                                  type=int,
                                  help='seed used in training.',
-                                 default=42)
+                                 default=210)
         self.parser.add_argument("--model_name",
                                  type=str,
                                  help="the name of the folder to save the model in",
@@ -45,6 +49,9 @@ class MonodepthOptions:
                                  help="number of resnet layers",
                                  default=18,
                                  choices=[18, 34, 50, 101, 152])
+        self.parser.add_argument("--freeze_bn",
+                                 action='store_true',
+                                 help='freeze the running mean and running variance of all bn layers.')
         self.parser.add_argument("--dataset",
                                  type=str,
                                  help="dataset to train on",
@@ -123,9 +130,8 @@ class MonodepthOptions:
                                  action="store_true")
         self.parser.add_argument("--weights_init",
                                  type=str,
-                                 help="pretrained or scratch",
-                                 default="pretrained",
-                                 choices=["pretrained", "scratch"])
+                                 help="choose from default (paddle pretrained weights), scratch, or a path to a custom weight file.",
+                                 default="paddle_pretrained")
         self.parser.add_argument("--pose_model_input",
                                  type=str,
                                  help="how many images the pose network gets",
@@ -138,9 +144,6 @@ class MonodepthOptions:
                                  choices=["posecnn", "separate_resnet", "shared"])
 
         # SYSTEM options
-        self.parser.add_argument("--no_cuda",
-                                 help="if set disables CUDA",
-                                 action="store_true")
         self.parser.add_argument("--num_workers",
                                  type=int,
                                  help="number of dataloader workers",

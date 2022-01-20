@@ -118,7 +118,7 @@ class Conv3x3(nn.Layer):
     """
     def __init__(self, in_channels, out_channels, use_refl=True):
         super(Conv3x3, self).__init__()
-        self.conv = nn.Conv2D(int(in_channels), int(out_channels), 3, padding=1, padding_mode='reflect' if use_refl else 'zeros')
+        self.conv = nn.Conv2D(int(in_channels), int(out_channels), 3, padding=1, padding_mode='reflect' if use_refl else 'zeros', weight_attr=nn.initializer.KaimingUniform())
 
     def forward(self, x):
         out = self.conv(x)

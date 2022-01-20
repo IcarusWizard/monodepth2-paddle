@@ -74,18 +74,18 @@ def evaluate(opt):
         print("-> Loading weights from {}".format(opt.load_weights_folder))
 
         filenames = readlines(os.path.join(splits_dir, opt.eval_split, "test_files.txt"))
-        encoder_path = os.path.join(opt.load_weights_folder, "encoder.h5")
-        decoder_path = os.path.join(opt.load_weights_folder, "depth.h5")
+        encoder_path = os.path.join(opt.load_weights_folder, "encoder")
+        decoder_path = os.path.join(opt.load_weights_folder, "depth")
 
         encoder_dict = load_weight_file(encoder_path)
 
         dataset = datasets.KITTIRAWDataset(opt.data_path, filenames,
-                                           encoder_dict['height'].item(), encoder_dict['width'].item(),
+                                           encoder_dict['height'], encoder_dict['width'],
                                            [0], 4, is_train=False)
-        # print(dataset[0].keys())
+
         dataloader = DataLoader(dataset, batch_size=16, shuffle=False, num_workers=opt.num_workers, drop_last=False)
 
-        encoder = networks.ResnetEncoder(opt.num_layers, False)
+        encoder = networks.ResnetEncoder(opt.num_layers, 'scratch')
         depth_decoder = networks.DepthDecoder(encoder.num_ch_enc)
 
         model_dict = encoder.state_dict()

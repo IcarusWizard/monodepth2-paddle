@@ -119,8 +119,8 @@ class MonoDataset(Dataset):
         """
         inputs = {}
 
-        do_color_aug = self.is_train and random.random() > 0.5
-        do_flip = self.is_train and random.random() > 0.5
+        do_color_aug = self.is_train and np.random.random() > 0.5
+        do_flip = self.is_train and np.random.random() > 0.5
 
         line = self.filenames[index].split()
         folder = line[0]

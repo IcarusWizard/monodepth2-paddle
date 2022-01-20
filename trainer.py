@@ -6,6 +6,7 @@ from paddle import optimizer
 import paddle.nn.functional as F
 from paddle.io import DataLoader
 from visualdl import LogWriter
+import paddle.distributed as dist
 
 import json
 
@@ -20,6 +21,9 @@ class Trainer:
     def __init__(self, options):
         self.opt = options
         setup_seed(self.opt.seed)
+        self.rank = paddle.distributed.get_rank()
+        init_parallel = self.opt.num_gpus > 1
+        if init_parallel: dist.init_parallel_env()
         self.log_path = os.path.join(self.opt.log_dir, self.opt.model_name)
 
         # checking height and width are multiples of 32
@@ -41,7 +45,7 @@ class Trainer:
             self.opt.frame_ids.append("s")
 
         self.models["encoder"] = networks.ResnetEncoder(
-            self.opt.num_layers, self.opt.weights_init == "pretrained")
+            self.opt.num_layers, self.opt.weights_init)
         self.parameters_to_train += list(self.models["encoder"].parameters())
 
         self.models["depth"] = networks.DepthDecoder(
@@ -52,7 +56,7 @@ class Trainer:
             if self.opt.pose_model_type == "separate_resnet":
                 self.models["pose_encoder"] = networks.ResnetEncoder(
                     self.opt.num_layers,
-                    self.opt.weights_init == "pretrained",
+                    self.opt.weights_init,
                     num_input_images=self.num_pose_frames)
 
                 self.parameters_to_train += list(self.models["pose_encoder"].parameters())
@@ -86,11 +90,17 @@ class Trainer:
         self.model_lr_scheduler = optimizer.lr.StepDecay(self.opt.learning_rate, self.opt.scheduler_step_size, 0.1)
         self.model_optimizer = optimizer.Adam(self.model_lr_scheduler, parameters=self.parameters_to_train)
 
+        if init_parallel:
+            for name, model in self.models.items():
+                # model = paddle.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+                self.models[name] = paddle.DataParallel(model)
+
         if self.opt.load_weights_folder is not None:
             self.load_model()
 
-        print("Training model named:\n  ", self.opt.model_name)
-        print("Models and tensorboard events files are saved to:\n  ", self.opt.log_dir)
+        if self.rank == 0:
+            print("Training model named:\n  ", self.opt.model_name)
+            print("Models and tensorboard events files are saved to:\n  ", self.opt.log_dir)
 
         # data
         datasets_dict = {"kitti": datasets.KITTIRAWDataset,
@@ -103,26 +113,37 @@ class Trainer:
         val_filenames = readlines(fpath.format("val"))
         img_ext = '.png' if self.opt.png else '.jpg'
 
+        self.batch_size = self.opt.batch_size * max(1, self.opt.num_gpus)
+
         num_train_samples = len(train_filenames)
-        self.num_total_steps = num_train_samples // self.opt.batch_size * self.opt.num_epochs
+        self.num_total_steps = num_train_samples // self.batch_size * self.opt.num_epochs
 
         train_dataset = self.dataset(
             self.opt.data_path, train_filenames, self.opt.height, self.opt.width,
             self.opt.frame_ids, 4, is_train=True, img_ext=img_ext)
-        self.train_loader = DataLoader(
-            train_dataset, batch_size=self.opt.batch_size, shuffle=True,
-            num_workers=self.opt.num_workers, drop_last=True)
+        train_sampler = paddle.io.DistributedBatchSampler(
+            dataset=train_dataset,
+            batch_size=self.opt.batch_size,
+            shuffle=True,
+            drop_last=True
+        )
+        self.train_loader = DataLoader(train_dataset, batch_sampler=train_sampler, num_workers=self.opt.num_workers, worker_init_fn=setup_seed)
         val_dataset = self.dataset(
             self.opt.data_path, val_filenames, self.opt.height, self.opt.width,
             self.opt.frame_ids, 4, is_train=False, img_ext=img_ext)
-        self.val_loader = DataLoader(
-            val_dataset, batch_size=self.opt.batch_size, shuffle=True,
-            num_workers=self.opt.num_workers, drop_last=True)
+        val_sampler = paddle.io.DistributedBatchSampler(
+            dataset=val_dataset,
+            batch_size=self.opt.batch_size,
+            shuffle=False,
+            drop_last=True
+        )
+        self.val_loader = DataLoader(val_dataset, batch_sampler=val_sampler, num_workers=self.opt.num_workers)
         self.val_iter = iter(self.val_loader)
 
         self.writers = {}
-        for mode in ["train", "val"]:
-            self.writers[mode] = LogWriter(os.path.join(self.log_path, mode))
+        if self.rank == 0:
+            for mode in ["train", "val"]:
+                self.writers[mode] = LogWriter(os.path.join(self.log_path, mode))
 
         if not self.opt.no_ssim:
             self.ssim = SSIM()
@@ -140,16 +161,18 @@ class Trainer:
         self.depth_metric_names = [
             "de/abs_rel", "de/sq_rel", "de/rms", "de/log_rms", "da/a1", "da/a2", "da/a3"]
 
-        print("Using split:\n  ", self.opt.split)
-        print("There are {:d} training items and {:d} validation items\n".format(
-            len(train_dataset), len(val_dataset)))
+        if self.rank == 0:
+            print("Using split:\n  ", self.opt.split)
+            print("There are {:d} training items and {:d} validation items\n".format(
+                len(train_dataset), len(val_dataset)))
 
-        self.save_opts()
+        if self.rank == 0: self.save_opts()
 
     def set_train(self):
         """
         Convert all models to training mode
         """
+        if self.opt.freeze_bn: return self.set_eval()
         for m in self.models.values():
             m.train()
 
@@ -170,14 +193,14 @@ class Trainer:
         self.start_time = time.time()
         for self.epoch in range(self.opt.num_epochs):
             self.run_epoch()
-            if (self.epoch + 1) % self.opt.save_frequency == 0:
+            if self.rank == 0 and (self.epoch + 1) % self.opt.save_frequency == 0:
                 self.save_model(self.epoch)
             
             val_loss = self.val()
             print(f'In epoch {self.epoch}, the validation loss is {val_loss}.')
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                self.save_model("best")
+                if self.rank == 0: self.save_model("best")
 
     def run_epoch(self):
         """
@@ -185,7 +208,7 @@ class Trainer:
         """
         self.model_lr_scheduler.step()
 
-        print("Training")
+        if self.rank == 0: print("Training")
         self.set_train()
 
         last_log_time = time.time()
@@ -201,11 +224,11 @@ class Trainer:
 
             duration = time.time() - last_log_time
 
-            if (batch_idx + 1) % self.opt.log_frequency == 0:
+            if self.rank == 0 and (batch_idx + 1) % self.opt.log_frequency == 0:
                 self.log_time(batch_idx + 1, duration / self.opt.log_frequency, sum(loss_list) / len(loss_list))
                 last_log_time = time.time()
 
-            if self.step % self.opt.visualdl_frequency == 0:
+            if self.rank == 0 and self.step % self.opt.visualdl_frequency == 0:
                 if "depth_gt" in inputs:
                     self.compute_depth_losses(inputs, outputs, losses)
 
@@ -309,7 +332,7 @@ class Trainer:
         Validate the model on the validation set
         """
         self.set_eval()
-        print("Validating")
+        if self.rank == 0: print("Validating")
 
         with paddle.no_grad():
             loss_list = []
@@ -320,7 +343,7 @@ class Trainer:
             if "depth_gt" in inputs:
                 self.compute_depth_losses(inputs, outputs, losses)
 
-            self.visualdl_log("val", inputs, outputs, losses)
+            if self.rank == 0: self.visualdl_log("val", inputs, outputs, losses)
 
         return sum(loss_list) / len(loss_list)
 
@@ -522,7 +545,7 @@ class Trainer:
         """
         Print a logging statement to the terminal
         """
-        samples_per_sec = self.opt.batch_size / duration
+        samples_per_sec = self.batch_size / duration
         time_sofar = time.time() - self.start_time
         training_time_left = (self.num_total_steps / self.step - 1.0) * time_sofar if self.step > 0 else 0
         print_string = "epoch {:>3} | batch {:>6} | examples/s: {:5.1f}" + \
@@ -610,7 +633,7 @@ class Trainer:
 
         for n in self.opt.models_to_load:
             print("Loading {} weights...".format(n))
-            path = os.path.join(self.opt.load_weights_folder, "{}.pdparams".format(n))
+            path = os.path.join(self.opt.load_weights_folder, n)
             model_dict = self.models[n].state_dict()
             pretrained_dict = load_weight_file(path)
             pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
@@ -618,7 +641,7 @@ class Trainer:
             self.models[n].load_dict(model_dict)
 
         # loading adam state
-        optimizer_load_path = os.path.join(self.opt.load_weights_folder, "adam.pdparams")
+        optimizer_load_path = os.path.join(self.opt.load_weights_folder, "adam")
         if os.path.isfile(optimizer_load_path):
             print("Loading Adam weights")
             optimizer_dict = load_weight_file(optimizer_load_path)

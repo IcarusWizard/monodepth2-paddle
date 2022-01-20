@@ -16,23 +16,25 @@ def load_weight_file(weight_file):
     """
     Load weight from given file
     """
-    if weight_file.endswith('h5'):
+    if os.path.exists(weight_file + '.pdparams'):
+        print("loading weight from " + weight_file + '.pdparams')
+        weights = paddle.load(weight_file + '.pdparams')
+    elif os.path.exists(weight_file + '.h5'):
+        print("loading weight from " + weight_file + '.h5')
         weights = {}
-        with h5py.File(weight_file, 'r') as f:
+        with h5py.File(weight_file + '.h5', 'r') as f:
             for k in f.keys():
                 paddle_key = k.replace('running_mean', '_mean')
                 paddle_key = paddle_key.replace('running_var', '_variance')
                 try:
                     value = paddle.to_tensor(f[k][:])
                 except: # handle zero shape
-                    value = paddle.to_tensor(f[k][...])
+                    value = paddle.to_tensor(f[k][...].item())
                 if 'weight' in paddle_key and len(value.shape) == 2:
                     value = value.T
-                weights[paddle_key] = value
-    elif weight_file.endswith('.pdparams'):
-        weights = paddle.load(weight_file)
+                weights[paddle_key] = value 
     else:
-        raise NotImplementedError(f'Do not have method to load {weight_file}')
+        raise NotImplementedError(f'Do not find validate weight from {weight_file}')
     return weights
 
 def readlines(filename):
