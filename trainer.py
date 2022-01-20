@@ -618,8 +618,9 @@ class Trainer:
                 to_save['use_stereo'] = self.opt.use_stereo
             paddle.save(to_save, save_path)
 
-        save_path = os.path.join(save_folder, "{}.pdparams".format("adam"))
-        paddle.save(self.model_optimizer.state_dict(), save_path)
+        # do not save parameter in the optimizor to save space
+        # save_path = os.path.join(save_folder, "{}.pdparams".format("adam"))
+        # paddle.save(self.model_optimizer.state_dict(), save_path)
 
     def load_model(self):
         """
