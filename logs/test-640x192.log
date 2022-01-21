@@ -1,0 +1,19 @@
+-> Loading weights from weights/best_640x192/
+loading weight from weights/best_640x192/encoder.pdparams
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/framework/io.py:415: DeprecationWarning: Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated, and in 3.8 it will stop working
+  if isinstance(obj, collections.Iterable) and not isinstance(obj, (
+W0120 18:59:04.852658 13215 device_context.cc:447] Please NOTE: device: 0, GPU Compute Capability: 7.0, Driver API Version: 10.1, Runtime API Version: 10.1
+W0120 18:59:04.857043 13215 device_context.cc:465] device: 0, cuDNN Version: 7.6.
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/nn/layer/conv.py:77: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  } and not isinstance(padding, np.int):
+loading weight from weights/best_640x192/depth.pdparams
+-> Computing predictions with size 640x192
+100%|███████████████████████████████████████████| 44/44 [01:30<00:00,  2.05s/it]
+-> Evaluating
+   Stereo evaluation - disabling median scaling, scaling by 5.4
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.109  &   0.880  &   4.903  &   0.200  &   0.868  &   0.955  &   0.979  \\
+
+-> Done!
