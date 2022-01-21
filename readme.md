@@ -51,6 +51,7 @@ KITTI数据集存在两种划分，一种是官方标准划分，称为KITTI划�
 |1024 x 320 复现精度| **0.104** |**0.798** |**4.619**| **0.192** |**0.879**|**0.958**|**0.980**|
 
 训练日志链接：[640x192 train log](logs/train-640x192.log), [1024x320 finetune log](logs/finetune-1024x320.log), [640x192 test log](logs/test-640x192.log), [1024x320 test log](logs/test-1024x320.log)
+
 权重文件链接：[pytorch resent18 pretrained weight](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/resnet18-pytorch.h5), [our best 640x192 weights](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/best_640x192.zip), [our best 1024x320 weights](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/best_1024x320.zip)
 
 ## 4. 快速开始
@@ -76,7 +77,7 @@ python train.py --model_name mono+stereo_model_640x192 --frame_ids 0 -1 1 --use_
 python train.py --model_name mono+stereo_model_1024x320 --frame_ids 0 -1 1 --use_stereo \
     --data_path <path to your kitti dataset> --height 320 --width 1024 \
     --load_weights_folder <path to the best 640x192 models> \
-    --log_dir logs --num_workers 4 --batch_size 4 --num_epochs 1 --learning_rate 5e-5
+    --log_dir logs --num_workers 4 --batch_size 4 --num_epochs 2 --learning_rate 5e-5
 ```
 
 #### 评估

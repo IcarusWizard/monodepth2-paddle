@@ -1,0 +1,231 @@
+W0121 11:08:33.374001  1114 device_context.cc:447] Please NOTE: device: 0, GPU Compute Capability: 7.0, Driver API Version: 10.1, Runtime API Version: 10.1
+W0121 11:08:33.379424  1114 device_context.cc:465] device: 0, cuDNN Version: 7.6.
+100%|██████████████████████████████████| 69183/69183 [00:01<00:00, 47544.90it/s]
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/nn/layer/conv.py:77: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  } and not isinstance(padding, np.int):
+loading model from folder weights/best_640x192/
+Loading encoder weights...
+loading weight from weights/best_640x192/encoder.pdparams
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/framework/io.py:415: DeprecationWarning: Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated, and in 3.8 it will stop working
+  if isinstance(obj, collections.Iterable) and not isinstance(obj, (
+Loading depth weights...
+loading weight from weights/best_640x192/depth.pdparams
+Loading pose_encoder weights...
+loading weight from weights/best_640x192/pose_encoder.pdparams
+Loading pose weights...
+loading weight from weights/best_640x192/pose.pdparams
+Cannot find Adam weights so Adam is randomly initialized
+Training model named:
+   mono+stereo_model_1024x320
+Models and tensorboard events files are saved to:
+   logs
+Using split:
+   eigen_zhou
+There are 39810 training items and 4424 validation items
+
+Training
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/nn/layer/norm.py:653: UserWarning: When training, we now always track global mean and variance.
+  "When training, we now always track global mean and variance.")
+epoch   0 | batch    100 | examples/s:   5.6 | loss: 0.10086 | time elapsed: 00h01m11s | time left: 03h57m04s
+epoch   0 | batch    200 | examples/s:   6.2 | loss: 0.09678 | time elapsed: 00h02m15s | time left: 03h44m00s
+epoch   0 | batch    300 | examples/s:   6.2 | loss: 0.09486 | time elapsed: 00h03m20s | time left: 03h39m13s
+epoch   0 | batch    400 | examples/s:   6.2 | loss: 0.09413 | time elapsed: 00h04m25s | time left: 03h36m00s
+epoch   0 | batch    500 | examples/s:   6.2 | loss: 0.09330 | time elapsed: 00h05m29s | time left: 03h33m44s
+epoch   0 | batch    600 | examples/s:   6.2 | loss: 0.09276 | time elapsed: 00h06m34s | time left: 03h31m53s
+epoch   0 | batch    700 | examples/s:   6.2 | loss: 0.09224 | time elapsed: 00h07m39s | time left: 03h30m24s
+epoch   0 | batch    800 | examples/s:   6.2 | loss: 0.09189 | time elapsed: 00h08m43s | time left: 03h28m44s
+epoch   0 | batch    900 | examples/s:   6.1 | loss: 0.09174 | time elapsed: 00h09m48s | time left: 03h27m30s
+epoch   0 | batch   1000 | examples/s:   6.2 | loss: 0.09137 | time elapsed: 00h10m53s | time left: 03h26m08s
+epoch   0 | batch   1100 | examples/s:   6.2 | loss: 0.09129 | time elapsed: 00h11m58s | time left: 03h24m47s
+epoch   0 | batch   1200 | examples/s:   6.1 | loss: 0.09100 | time elapsed: 00h13m03s | time left: 03h23m44s
+epoch   0 | batch   1300 | examples/s:   6.2 | loss: 0.09065 | time elapsed: 00h14m07s | time left: 03h22m22s
+epoch   0 | batch   1400 | examples/s:   6.2 | loss: 0.09028 | time elapsed: 00h15m12s | time left: 03h21m09s
+epoch   0 | batch   1500 | examples/s:   6.2 | loss: 0.08994 | time elapsed: 00h16m17s | time left: 03h19m56s
+epoch   0 | batch   1600 | examples/s:   6.2 | loss: 0.08964 | time elapsed: 00h17m21s | time left: 03h18m44s
+epoch   0 | batch   1700 | examples/s:   6.1 | loss: 0.08951 | time elapsed: 00h18m26s | time left: 03h17m39s
+epoch   0 | batch   1800 | examples/s:   6.2 | loss: 0.08930 | time elapsed: 00h19m31s | time left: 03h16m25s
+epoch   0 | batch   1900 | examples/s:   6.2 | loss: 0.08918 | time elapsed: 00h20m35s | time left: 03h15m10s
+epoch   0 | batch   2000 | examples/s:   6.2 | loss: 0.08906 | time elapsed: 00h21m39s | time left: 03h14m01s
+epoch   0 | batch   2100 | examples/s:   6.1 | loss: 0.08901 | time elapsed: 00h22m45s | time left: 03h13m04s
+epoch   0 | batch   2200 | examples/s:   6.1 | loss: 0.08891 | time elapsed: 00h23m51s | time left: 03h12m03s
+epoch   0 | batch   2300 | examples/s:   6.1 | loss: 0.08881 | time elapsed: 00h24m56s | time left: 03h10m57s
+epoch   0 | batch   2400 | examples/s:   6.2 | loss: 0.08869 | time elapsed: 00h26m00s | time left: 03h09m45s
+epoch   0 | batch   2500 | examples/s:   6.3 | loss: 0.08858 | time elapsed: 00h27m04s | time left: 03h08m32s
+epoch   0 | batch   2600 | examples/s:   6.2 | loss: 0.08847 | time elapsed: 00h28m08s | time left: 03h07m23s
+epoch   0 | batch   2700 | examples/s:   6.2 | loss: 0.08835 | time elapsed: 00h29m13s | time left: 03h06m18s
+epoch   0 | batch   2800 | examples/s:   6.1 | loss: 0.08816 | time elapsed: 00h30m18s | time left: 03h05m15s
+epoch   0 | batch   2900 | examples/s:   6.2 | loss: 0.08808 | time elapsed: 00h31m23s | time left: 03h04m10s
+epoch   0 | batch   3000 | examples/s:   6.2 | loss: 0.08804 | time elapsed: 00h32m28s | time left: 03h03m04s
+epoch   0 | batch   3100 | examples/s:   6.2 | loss: 0.08792 | time elapsed: 00h33m33s | time left: 03h01m56s
+epoch   0 | batch   3200 | examples/s:   6.2 | loss: 0.08787 | time elapsed: 00h34m37s | time left: 03h00m47s
+epoch   0 | batch   3300 | examples/s:   6.3 | loss: 0.08774 | time elapsed: 00h35m41s | time left: 02h59m37s
+epoch   0 | batch   3400 | examples/s:   6.1 | loss: 0.08764 | time elapsed: 00h36m46s | time left: 02h58m33s
+epoch   0 | batch   3500 | examples/s:   6.2 | loss: 0.08756 | time elapsed: 00h37m51s | time left: 02h57m28s
+epoch   0 | batch   3600 | examples/s:   6.3 | loss: 0.08747 | time elapsed: 00h38m55s | time left: 02h56m19s
+epoch   0 | batch   3700 | examples/s:   6.1 | loss: 0.08736 | time elapsed: 00h40m00s | time left: 02h55m16s
+epoch   0 | batch   3800 | examples/s:   6.2 | loss: 0.08726 | time elapsed: 00h41m04s | time left: 02h54m08s
+epoch   0 | batch   3900 | examples/s:   6.3 | loss: 0.08717 | time elapsed: 00h42m08s | time left: 02h53m00s
+epoch   0 | batch   4000 | examples/s:   6.1 | loss: 0.08713 | time elapsed: 00h43m13s | time left: 02h51m56s
+epoch   0 | batch   4100 | examples/s:   6.1 | loss: 0.08706 | time elapsed: 00h44m19s | time left: 02h50m54s
+epoch   0 | batch   4200 | examples/s:   6.2 | loss: 0.08705 | time elapsed: 00h45m23s | time left: 02h49m47s
+epoch   0 | batch   4300 | examples/s:   6.1 | loss: 0.08694 | time elapsed: 00h46m28s | time left: 02h48m43s
+epoch   0 | batch   4400 | examples/s:   6.1 | loss: 0.08687 | time elapsed: 00h47m35s | time left: 02h47m43s
+epoch   0 | batch   4500 | examples/s:   6.2 | loss: 0.08684 | time elapsed: 00h48m39s | time left: 02h46m37s
+epoch   0 | batch   4600 | examples/s:   6.2 | loss: 0.08679 | time elapsed: 00h49m44s | time left: 02h45m30s
+epoch   0 | batch   4700 | examples/s:   6.1 | loss: 0.08674 | time elapsed: 00h50m49s | time left: 02h44m27s
+epoch   0 | batch   4800 | examples/s:   6.2 | loss: 0.08667 | time elapsed: 00h51m53s | time left: 02h43m20s
+epoch   0 | batch   4900 | examples/s:   6.2 | loss: 0.08658 | time elapsed: 00h52m58s | time left: 02h42m15s
+epoch   0 | batch   5000 | examples/s:   6.2 | loss: 0.08649 | time elapsed: 00h54m03s | time left: 02h41m10s
+epoch   0 | batch   5100 | examples/s:   6.2 | loss: 0.08639 | time elapsed: 00h55m08s | time left: 02h40m05s
+epoch   0 | batch   5200 | examples/s:   6.1 | loss: 0.08633 | time elapsed: 00h56m13s | time left: 02h39m01s
+epoch   0 | batch   5300 | examples/s:   6.1 | loss: 0.08629 | time elapsed: 00h57m18s | time left: 02h37m57s
+epoch   0 | batch   5400 | examples/s:   6.2 | loss: 0.08625 | time elapsed: 00h58m23s | time left: 02h36m51s
+epoch   0 | batch   5500 | examples/s:   6.1 | loss: 0.08620 | time elapsed: 00h59m28s | time left: 02h35m47s
+epoch   0 | batch   5600 | examples/s:   6.1 | loss: 0.08612 | time elapsed: 01h00m34s | time left: 02h34m44s
+epoch   0 | batch   5700 | examples/s:   6.2 | loss: 0.08606 | time elapsed: 01h01m39s | time left: 02h33m39s
+epoch   0 | batch   5800 | examples/s:   6.1 | loss: 0.08603 | time elapsed: 01h02m44s | time left: 02h32m35s
+epoch   0 | batch   5900 | examples/s:   6.2 | loss: 0.08601 | time elapsed: 01h03m48s | time left: 02h31m29s
+epoch   0 | batch   6000 | examples/s:   6.2 | loss: 0.08600 | time elapsed: 01h04m53s | time left: 02h30m24s
+epoch   0 | batch   6100 | examples/s:   6.1 | loss: 0.08594 | time elapsed: 01h05m58s | time left: 02h29m20s
+epoch   0 | batch   6200 | examples/s:   6.2 | loss: 0.08590 | time elapsed: 01h07m03s | time left: 02h28m14s
+epoch   0 | batch   6300 | examples/s:   6.2 | loss: 0.08587 | time elapsed: 01h08m07s | time left: 02h27m09s
+epoch   0 | batch   6400 | examples/s:   6.2 | loss: 0.08581 | time elapsed: 01h09m12s | time left: 02h26m03s
+epoch   0 | batch   6500 | examples/s:   6.2 | loss: 0.08579 | time elapsed: 01h10m17s | time left: 02h24m58s
+epoch   0 | batch   6600 | examples/s:   6.2 | loss: 0.08575 | time elapsed: 01h11m21s | time left: 02h23m53s
+epoch   0 | batch   6700 | examples/s:   6.1 | loss: 0.08568 | time elapsed: 01h12m27s | time left: 02h22m49s
+epoch   0 | batch   6800 | examples/s:   6.2 | loss: 0.08562 | time elapsed: 01h13m32s | time left: 02h21m44s
+epoch   0 | batch   6900 | examples/s:   6.2 | loss: 0.08560 | time elapsed: 01h14m36s | time left: 02h20m39s
+epoch   0 | batch   7000 | examples/s:   6.2 | loss: 0.08559 | time elapsed: 01h15m41s | time left: 02h19m32s
+epoch   0 | batch   7100 | examples/s:   6.1 | loss: 0.08554 | time elapsed: 01h16m46s | time left: 02h18m28s
+epoch   0 | batch   7200 | examples/s:   6.2 | loss: 0.08551 | time elapsed: 01h17m50s | time left: 02h17m22s
+epoch   0 | batch   7300 | examples/s:   6.1 | loss: 0.08546 | time elapsed: 01h18m55s | time left: 02h16m18s
+epoch   0 | batch   7400 | examples/s:   6.2 | loss: 0.08541 | time elapsed: 01h20m00s | time left: 02h15m13s
+epoch   0 | batch   7500 | examples/s:   6.2 | loss: 0.08539 | time elapsed: 01h21m04s | time left: 02h14m07s
+epoch   0 | batch   7600 | examples/s:   6.1 | loss: 0.08534 | time elapsed: 01h22m10s | time left: 02h13m03s
+epoch   0 | batch   7700 | examples/s:   6.2 | loss: 0.08529 | time elapsed: 01h23m15s | time left: 02h11m58s
+epoch   0 | batch   7800 | examples/s:   6.1 | loss: 0.08524 | time elapsed: 01h24m20s | time left: 02h10m54s
+epoch   0 | batch   7900 | examples/s:   6.2 | loss: 0.08522 | time elapsed: 01h25m25s | time left: 02h09m49s
+epoch   0 | batch   8000 | examples/s:   6.1 | loss: 0.08523 | time elapsed: 01h26m30s | time left: 02h08m44s
+epoch   0 | batch   8100 | examples/s:   6.1 | loss: 0.08521 | time elapsed: 01h27m35s | time left: 02h07m40s
+epoch   0 | batch   8200 | examples/s:   6.2 | loss: 0.08514 | time elapsed: 01h28m39s | time left: 02h06m34s
+epoch   0 | batch   8300 | examples/s:   6.2 | loss: 0.08512 | time elapsed: 01h29m44s | time left: 02h05m29s
+epoch   0 | batch   8400 | examples/s:   6.2 | loss: 0.08510 | time elapsed: 01h30m49s | time left: 02h04m24s
+epoch   0 | batch   8500 | examples/s:   6.1 | loss: 0.08508 | time elapsed: 01h31m54s | time left: 02h03m20s
+epoch   0 | batch   8600 | examples/s:   6.1 | loss: 0.08505 | time elapsed: 01h33m00s | time left: 02h02m16s
+epoch   0 | batch   8700 | examples/s:   6.2 | loss: 0.08503 | time elapsed: 01h34m05s | time left: 02h01m11s
+epoch   0 | batch   8800 | examples/s:   6.2 | loss: 0.08501 | time elapsed: 01h35m09s | time left: 02h00m06s
+epoch   0 | batch   8900 | examples/s:   6.1 | loss: 0.08498 | time elapsed: 01h36m15s | time left: 01h59m01s
+epoch   0 | batch   9000 | examples/s:   6.1 | loss: 0.08497 | time elapsed: 01h37m21s | time left: 01h57m58s
+epoch   0 | batch   9100 | examples/s:   6.1 | loss: 0.08494 | time elapsed: 01h38m26s | time left: 01h56m53s
+epoch   0 | batch   9200 | examples/s:   6.1 | loss: 0.08490 | time elapsed: 01h39m31s | time left: 01h55m49s
+epoch   0 | batch   9300 | examples/s:   6.2 | loss: 0.08486 | time elapsed: 01h40m36s | time left: 01h54m44s
+epoch   0 | batch   9400 | examples/s:   6.1 | loss: 0.08483 | time elapsed: 01h41m41s | time left: 01h53m39s
+epoch   0 | batch   9500 | examples/s:   6.1 | loss: 0.08484 | time elapsed: 01h42m46s | time left: 01h52m34s
+epoch   0 | batch   9600 | examples/s:   6.1 | loss: 0.08484 | time elapsed: 01h43m52s | time left: 01h51m30s
+epoch   0 | batch   9700 | examples/s:   6.2 | loss: 0.08480 | time elapsed: 01h44m56s | time left: 01h50m25s
+epoch   0 | batch   9800 | examples/s:   6.2 | loss: 0.08477 | time elapsed: 01h46m00s | time left: 01h49m19s
+epoch   0 | batch   9900 | examples/s:   6.2 | loss: 0.08473 | time elapsed: 01h47m05s | time left: 01h48m14s
+Validating
+In epoch 0, the validation loss is 0.0819323031167764.
+Training
+epoch   1 | batch    100 | examples/s:   5.9 | loss: 0.08242 | time elapsed: 01h54m07s | time left: 01h51m52s
+epoch   1 | batch    200 | examples/s:   6.2 | loss: 0.08115 | time elapsed: 01h55m11s | time left: 01h50m40s
+epoch   1 | batch    300 | examples/s:   6.2 | loss: 0.08139 | time elapsed: 01h56m16s | time left: 01h49m29s
+epoch   1 | batch    400 | examples/s:   6.2 | loss: 0.08095 | time elapsed: 01h57m21s | time left: 01h48m18s
+epoch   1 | batch    500 | examples/s:   6.2 | loss: 0.08152 | time elapsed: 01h58m25s | time left: 01h47m07s
+epoch   1 | batch    600 | examples/s:   6.2 | loss: 0.08160 | time elapsed: 01h59m30s | time left: 01h45m56s
+epoch   1 | batch    700 | examples/s:   6.1 | loss: 0.08186 | time elapsed: 02h00m35s | time left: 01h44m45s
+epoch   1 | batch    800 | examples/s:   6.2 | loss: 0.08198 | time elapsed: 02h01m40s | time left: 01h43m35s
+epoch   1 | batch    900 | examples/s:   6.1 | loss: 0.08188 | time elapsed: 02h02m45s | time left: 01h42m25s
+epoch   1 | batch   1000 | examples/s:   6.2 | loss: 0.08216 | time elapsed: 02h03m49s | time left: 01h41m14s
+epoch   1 | batch   1100 | examples/s:   6.2 | loss: 0.08206 | time elapsed: 02h04m54s | time left: 01h40m03s
+epoch   1 | batch   1200 | examples/s:   6.1 | loss: 0.08215 | time elapsed: 02h05m59s | time left: 01h38m53s
+epoch   1 | batch   1300 | examples/s:   6.2 | loss: 0.08214 | time elapsed: 02h07m03s | time left: 01h37m43s
+epoch   1 | batch   1400 | examples/s:   6.2 | loss: 0.08221 | time elapsed: 02h08m08s | time left: 01h36m33s
+epoch   1 | batch   1500 | examples/s:   6.2 | loss: 0.08219 | time elapsed: 02h09m13s | time left: 01h35m23s
+epoch   1 | batch   1600 | examples/s:   6.2 | loss: 0.08225 | time elapsed: 02h10m17s | time left: 01h34m13s
+epoch   1 | batch   1700 | examples/s:   6.1 | loss: 0.08225 | time elapsed: 02h11m22s | time left: 01h33m03s
+epoch   1 | batch   1800 | examples/s:   6.2 | loss: 0.08232 | time elapsed: 02h12m27s | time left: 01h31m54s
+epoch   1 | batch   1900 | examples/s:   6.2 | loss: 0.08230 | time elapsed: 02h13m32s | time left: 01h30m44s
+epoch   1 | batch   2000 | examples/s:   6.2 | loss: 0.08222 | time elapsed: 02h14m37s | time left: 01h29m35s
+epoch   1 | batch   2100 | examples/s:   6.1 | loss: 0.08214 | time elapsed: 02h15m42s | time left: 01h28m26s
+epoch   1 | batch   2200 | examples/s:   6.2 | loss: 0.08209 | time elapsed: 02h16m47s | time left: 01h27m17s
+epoch   1 | batch   2300 | examples/s:   6.2 | loss: 0.08214 | time elapsed: 02h17m52s | time left: 01h26m07s
+epoch   1 | batch   2400 | examples/s:   6.2 | loss: 0.08217 | time elapsed: 02h18m56s | time left: 01h24m58s
+epoch   1 | batch   2500 | examples/s:   6.2 | loss: 0.08226 | time elapsed: 02h20m00s | time left: 01h23m48s
+epoch   1 | batch   2600 | examples/s:   6.2 | loss: 0.08227 | time elapsed: 02h21m05s | time left: 01h22m39s
+epoch   1 | batch   2700 | examples/s:   6.1 | loss: 0.08225 | time elapsed: 02h22m10s | time left: 01h21m30s
+epoch   1 | batch   2800 | examples/s:   6.1 | loss: 0.08227 | time elapsed: 02h23m16s | time left: 01h20m22s
+epoch   1 | batch   2900 | examples/s:   6.1 | loss: 0.08224 | time elapsed: 02h24m21s | time left: 01h19m13s
+epoch   1 | batch   3000 | examples/s:   6.2 | loss: 0.08235 | time elapsed: 02h25m26s | time left: 01h18m04s
+epoch   1 | batch   3100 | examples/s:   6.2 | loss: 0.08239 | time elapsed: 02h26m31s | time left: 01h16m56s
+epoch   1 | batch   3200 | examples/s:   6.2 | loss: 0.08240 | time elapsed: 02h27m35s | time left: 01h15m47s
+epoch   1 | batch   3300 | examples/s:   6.2 | loss: 0.08237 | time elapsed: 02h28m40s | time left: 01h14m38s
+epoch   1 | batch   3400 | examples/s:   6.1 | loss: 0.08231 | time elapsed: 02h29m45s | time left: 01h13m30s
+epoch   1 | batch   3500 | examples/s:   6.2 | loss: 0.08229 | time elapsed: 02h30m49s | time left: 01h12m21s
+epoch   1 | batch   3600 | examples/s:   6.3 | loss: 0.08231 | time elapsed: 02h31m53s | time left: 01h11m12s
+epoch   1 | batch   3700 | examples/s:   6.1 | loss: 0.08228 | time elapsed: 02h32m59s | time left: 01h10m04s
+epoch   1 | batch   3800 | examples/s:   6.2 | loss: 0.08229 | time elapsed: 02h34m03s | time left: 01h08m56s
+epoch   1 | batch   3900 | examples/s:   6.2 | loss: 0.08224 | time elapsed: 02h35m07s | time left: 01h07m47s
+epoch   1 | batch   4000 | examples/s:   6.1 | loss: 0.08224 | time elapsed: 02h36m13s | time left: 01h06m39s
+epoch   1 | batch   4100 | examples/s:   6.1 | loss: 0.08222 | time elapsed: 02h37m19s | time left: 01h05m31s
+epoch   1 | batch   4200 | examples/s:   6.2 | loss: 0.08215 | time elapsed: 02h38m23s | time left: 01h04m23s
+epoch   1 | batch   4300 | examples/s:   6.1 | loss: 0.08208 | time elapsed: 02h39m28s | time left: 01h03m15s
+epoch   1 | batch   4400 | examples/s:   6.1 | loss: 0.08209 | time elapsed: 02h40m34s | time left: 01h02m07s
+epoch   1 | batch   4500 | examples/s:   6.2 | loss: 0.08204 | time elapsed: 02h41m38s | time left: 01h00m59s
+epoch   1 | batch   4600 | examples/s:   6.2 | loss: 0.08203 | time elapsed: 02h42m43s | time left: 00h59m51s
+epoch   1 | batch   4700 | examples/s:   6.1 | loss: 0.08209 | time elapsed: 02h43m48s | time left: 00h58m43s
+epoch   1 | batch   4800 | examples/s:   6.2 | loss: 0.08209 | time elapsed: 02h44m52s | time left: 00h57m35s
+epoch   1 | batch   4900 | examples/s:   6.2 | loss: 0.08207 | time elapsed: 02h45m57s | time left: 00h56m28s
+epoch   1 | batch   5000 | examples/s:   6.1 | loss: 0.08205 | time elapsed: 02h47m03s | time left: 00h55m20s
+epoch   1 | batch   5100 | examples/s:   6.1 | loss: 0.08202 | time elapsed: 02h48m08s | time left: 00h54m12s
+epoch   1 | batch   5200 | examples/s:   6.1 | loss: 0.08202 | time elapsed: 02h49m13s | time left: 00h53m05s
+epoch   1 | batch   5300 | examples/s:   6.1 | loss: 0.08199 | time elapsed: 02h50m19s | time left: 00h51m57s
+epoch   1 | batch   5400 | examples/s:   6.2 | loss: 0.08198 | time elapsed: 02h51m24s | time left: 00h50m50s
+epoch   1 | batch   5500 | examples/s:   6.2 | loss: 0.08202 | time elapsed: 02h52m28s | time left: 00h49m42s
+epoch   1 | batch   5600 | examples/s:   6.1 | loss: 0.08201 | time elapsed: 02h53m34s | time left: 00h48m35s
+epoch   1 | batch   5700 | examples/s:   6.2 | loss: 0.08202 | time elapsed: 02h54m38s | time left: 00h47m27s
+epoch   1 | batch   5800 | examples/s:   6.2 | loss: 0.08199 | time elapsed: 02h55m43s | time left: 00h46m19s
+epoch   1 | batch   5900 | examples/s:   6.2 | loss: 0.08195 | time elapsed: 02h56m48s | time left: 00h45m12s
+epoch   1 | batch   6000 | examples/s:   6.2 | loss: 0.08196 | time elapsed: 02h57m52s | time left: 00h44m04s
+epoch   1 | batch   6100 | examples/s:   6.1 | loss: 0.08195 | time elapsed: 02h58m58s | time left: 00h42m57s
+epoch   1 | batch   6200 | examples/s:   6.3 | loss: 0.08193 | time elapsed: 03h00m01s | time left: 00h41m50s
+epoch   1 | batch   6300 | examples/s:   6.2 | loss: 0.08195 | time elapsed: 03h01m06s | time left: 00h40m42s
+epoch   1 | batch   6400 | examples/s:   6.2 | loss: 0.08192 | time elapsed: 03h02m10s | time left: 00h39m35s
+epoch   1 | batch   6500 | examples/s:   6.2 | loss: 0.08191 | time elapsed: 03h03m15s | time left: 00h38m27s
+epoch   1 | batch   6600 | examples/s:   6.2 | loss: 0.08191 | time elapsed: 03h04m20s | time left: 00h37m20s
+epoch   1 | batch   6700 | examples/s:   6.1 | loss: 0.08190 | time elapsed: 03h05m26s | time left: 00h36m13s
+epoch   1 | batch   6800 | examples/s:   6.2 | loss: 0.08189 | time elapsed: 03h06m30s | time left: 00h35m06s
+epoch   1 | batch   6900 | examples/s:   6.1 | loss: 0.08188 | time elapsed: 03h07m35s | time left: 00h33m59s
+epoch   1 | batch   7000 | examples/s:   6.2 | loss: 0.08185 | time elapsed: 03h08m40s | time left: 00h32m52s
+epoch   1 | batch   7100 | examples/s:   6.1 | loss: 0.08184 | time elapsed: 03h09m45s | time left: 00h31m45s
+epoch   1 | batch   7200 | examples/s:   6.2 | loss: 0.08184 | time elapsed: 03h10m49s | time left: 00h30m37s
+epoch   1 | batch   7300 | examples/s:   6.1 | loss: 0.08184 | time elapsed: 03h11m55s | time left: 00h29m30s
+epoch   1 | batch   7400 | examples/s:   6.2 | loss: 0.08182 | time elapsed: 03h12m59s | time left: 00h28m23s
+epoch   1 | batch   7500 | examples/s:   6.1 | loss: 0.08182 | time elapsed: 03h14m05s | time left: 00h27m16s
+epoch   1 | batch   7600 | examples/s:   6.1 | loss: 0.08182 | time elapsed: 03h15m10s | time left: 00h26m09s
+epoch   1 | batch   7700 | examples/s:   6.2 | loss: 0.08180 | time elapsed: 03h16m14s | time left: 00h25m02s
+epoch   1 | batch   7800 | examples/s:   6.2 | loss: 0.08179 | time elapsed: 03h17m19s | time left: 00h23m56s
+epoch   1 | batch   7900 | examples/s:   6.2 | loss: 0.08182 | time elapsed: 03h18m24s | time left: 00h22m49s
+epoch   1 | batch   8000 | examples/s:   6.2 | loss: 0.08181 | time elapsed: 03h19m28s | time left: 00h21m42s
+epoch   1 | batch   8100 | examples/s:   6.1 | loss: 0.08177 | time elapsed: 03h20m34s | time left: 00h20m35s
+epoch   1 | batch   8200 | examples/s:   6.2 | loss: 0.08177 | time elapsed: 03h21m38s | time left: 00h19m28s
+epoch   1 | batch   8300 | examples/s:   6.2 | loss: 0.08176 | time elapsed: 03h22m43s | time left: 00h18m21s
+epoch   1 | batch   8400 | examples/s:   6.2 | loss: 0.08174 | time elapsed: 03h23m47s | time left: 00h17m14s
+epoch   1 | batch   8500 | examples/s:   6.2 | loss: 0.08174 | time elapsed: 03h24m52s | time left: 00h16m08s
+epoch   1 | batch   8600 | examples/s:   6.2 | loss: 0.08173 | time elapsed: 03h25m57s | time left: 00h15m01s
+epoch   1 | batch   8700 | examples/s:   6.1 | loss: 0.08175 | time elapsed: 03h27m02s | time left: 00h13m54s
+epoch   1 | batch   8800 | examples/s:   6.2 | loss: 0.08176 | time elapsed: 03h28m07s | time left: 00h12m47s
+epoch   1 | batch   8900 | examples/s:   6.2 | loss: 0.08176 | time elapsed: 03h29m11s | time left: 00h11m41s
+epoch   1 | batch   9000 | examples/s:   6.1 | loss: 0.08175 | time elapsed: 03h30m16s | time left: 00h10m34s
+epoch   1 | batch   9100 | examples/s:   6.2 | loss: 0.08175 | time elapsed: 03h31m21s | time left: 00h09m27s
+epoch   1 | batch   9200 | examples/s:   6.1 | loss: 0.08176 | time elapsed: 03h32m26s | time left: 00h08m21s
+epoch   1 | batch   9300 | examples/s:   6.2 | loss: 0.08175 | time elapsed: 03h33m31s | time left: 00h07m14s
+epoch   1 | batch   9400 | examples/s:   6.2 | loss: 0.08173 | time elapsed: 03h34m36s | time left: 00h06m07s
+epoch   1 | batch   9500 | examples/s:   6.1 | loss: 0.08171 | time elapsed: 03h35m41s | time left: 00h05m01s
+epoch   1 | batch   9600 | examples/s:   6.1 | loss: 0.08171 | time elapsed: 03h36m46s | time left: 00h03m54s
+epoch   1 | batch   9700 | examples/s:   6.2 | loss: 0.08169 | time elapsed: 03h37m51s | time left: 00h02m48s
+epoch   1 | batch   9800 | examples/s:   6.2 | loss: 0.08167 | time elapsed: 03h38m56s | time left: 00h01m41s
+epoch   1 | batch   9900 | examples/s:   6.2 | loss: 0.08165 | time elapsed: 03h40m00s | time left: 00h00m35s
+Validating
