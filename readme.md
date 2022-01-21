@@ -50,8 +50,8 @@ KITTI数据集存在两种划分，一种是官方标准划分，称为KITTI划�
 |640  x 192 复现精度|   0.109   |  0.880   |  4.903  |   0.200   |  0.868  |  0.955  |  0.979  |
 |1024 x 320 复现精度| **0.104** |**0.798** |**4.619**| **0.192** |**0.879**|**0.958**|**0.980**|
 
-训练日志链接：[640x192 train log](logs/train-640x192.log), [1024x320 finetune log](logs/city2eigen.log), [640x192 test log](logs/test-640x192.log), [1024x320 test log](logs/test-1024x320.log)
-权重文件链接：[pytorch resent18 pretrained weight](https://github.com/IcarusWizard/monodepth-paddle/releases/download/v0.1/resnet18_pytorch.h5), [our best 640x192 weights](https://github.com/IcarusWizard/monodepth-paddle/releases/download/v0.1/best_640x192.zip), [our best 1024x320 weights](https://github.com/IcarusWizard/monodepth-paddle/releases/download/v0.1/best_1024x320.zips)
+训练日志链接：[640x192 train log](logs/train-640x192.log), [1024x320 finetune log](logs/finetune-1024x320.log), [640x192 test log](logs/test-640x192.log), [1024x320 test log](logs/test-1024x320.log)
+权重文件链接：[pytorch resent18 pretrained weight](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/resnet18_pytorch.h5), [our best 640x192 weights](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/best_640x192.zip), [our best 1024x320 weights](https://github.com/IcarusWizard/monodepth2-paddle/releases/download/v0.1/best_1024x320.zip)
 
 ## 4. 快速开始
 
