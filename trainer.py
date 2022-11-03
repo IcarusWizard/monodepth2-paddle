@@ -220,7 +220,7 @@ class Trainer:
             self.model_optimizer.clear_grad()
             losses["loss"].backward()
             self.model_optimizer.step()
-            loss_list.append(losses["loss"].numpy()[0])
+            loss_list.append(float(losses["loss"]))
 
             duration = time.time() - last_log_time
 
@@ -338,7 +338,7 @@ class Trainer:
             loss_list = []
             for batch_idx, inputs in enumerate(self.val_loader):
                 outputs, losses = self.process_batch(inputs)
-                loss_list.append(losses["loss"].numpy()[0])
+                loss_list.append(float(losses["loss"]))
 
             if "depth_gt" in inputs:
                 self.compute_depth_losses(inputs, outputs, losses)
